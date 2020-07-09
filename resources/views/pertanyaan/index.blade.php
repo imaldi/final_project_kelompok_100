@@ -1,6 +1,7 @@
 @extends('adminlte.master')
 
 @section('content')
+    <a href="{{ url("/tag") }}">Daftar tag</a>
     <h1> Daftar pertanyaan </h1>
     <a class="mb-5" href="{{ url("/pertanyaan/create")}}">Buat pertanyaan</a>
 

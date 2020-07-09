@@ -46,7 +46,7 @@ class PertanyaanController extends Controller
         ]);
 
         // masih satu tag
-        $pertanyaan->tags()->attach($pertanyaan);
+        $pertanyaan->tags()->attach($request->tag);
 
         return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil dibuat");
     }

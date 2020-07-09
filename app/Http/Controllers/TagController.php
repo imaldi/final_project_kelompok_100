@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Tag;
 
 class TagController extends Controller
 {
@@ -13,7 +14,9 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
+        $tags = Tag::get();        
+
+        return view("tag.index", compact("tags"));
     }
 
     /**
@@ -23,7 +26,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        //
+        return view("tag.create");
     }
 
     /**
@@ -34,7 +37,11 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Tag::create([
+            "tag_name" => $request->tag_name
+        ]);
+
+        return redirect("/tag")->with("msg", "tag berhasil ditambahkan");
     }
 
     /**
@@ -56,7 +63,9 @@ class TagController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tag = Tag::findOrFail($id);
+
+        return view("tag.edit", compact("tag"));
     }
 
     /**
@@ -68,7 +77,13 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tag = Tag::findOrFail($id);
+
+        $tag->update([
+            "tag_name" => $request->tag_name
+        ]);
+
+        return redirect("/tag")->with("msg", "tag berhasil diedit");
     }
 
     /**
@@ -79,6 +94,10 @@ class TagController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tag = Tag::findOrFail($id);
+
+        $tag->delete();
+
+        return redirect("/tag")->with("msg", "tag berhasil dihapus");
     }
 }

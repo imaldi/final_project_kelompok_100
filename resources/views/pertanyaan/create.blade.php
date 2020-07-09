@@ -5,11 +5,9 @@
     <label for="">Isi</label>
     <textarea name="isi" id="" cols="30" rows="10"> </textarea>
     <br>
-    <select name="tag" id="" multiple>
-        @foreach ($tag as $item)
-            <option value="{{$item->tag_name}}">{{$item->tag_name}}</option>
-        @endforeach
-    </select>
+    @foreach ($tag as $item)
+        <input type="checkbox" name="tag[]" id="" value="{{$item->id}}">  {{$item->tag_name}}
+    @endforeach
     <button type="submit">Tambah</button>
     @csrf
 </form>
