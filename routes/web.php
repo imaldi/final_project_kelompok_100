@@ -20,8 +20,20 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(["middleware" => ["auth"]], function(){
+    Route::resource('/pertanyaan',  'PertanyaanController')->except([
+        "index", "show"
+    ]);
+    Route::resource('/pertanyaan/{id}/jawaban',     'JawabanController')->only([
+        "store", "edit", "update", "destroy"
+    ]);
+});
+
+Route::resource('/pertanyaan',  'PertanyaanController')->only([
+    'index', 'show'
+]);
+
 // Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/users',       'UserController');
-Route::resource('/pertanyaan',  'PertanyaanController');
-Route::resource('/jawaban',     'JawabanController');
+
 Route::resource('/tag',         'TagController');

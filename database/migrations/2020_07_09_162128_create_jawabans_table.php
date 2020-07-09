@@ -17,10 +17,12 @@ class CreateJawabansTable extends Migration
             $table->bigIncrements('id');
             $table->string('isi');
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('pertanyaan_id')->unsigned();
             $table->boolean('confirmed')->nullable()->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('pertanyaan_id')->references('id')->on('pertanyaans')->onDelete('cascade');
         });
     }
 

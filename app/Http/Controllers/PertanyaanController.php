@@ -59,7 +59,7 @@ class PertanyaanController extends Controller
      */
     public function show($id)
     {
-        $pertanyaan = Pertanyaan::with("tags")->findOrFail($id);
+        $pertanyaan = Pertanyaan::with(["tags", "jawabans"])->findOrFail($id);
 
         return view("pertanyaan.show", compact("pertanyaan"));
     }
