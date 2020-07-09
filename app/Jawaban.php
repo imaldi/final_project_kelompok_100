@@ -9,4 +9,9 @@ class Jawaban extends Model
     protected $fillable = [
         "isi", "user_id", "confirmed"
     ];
+
+    public function pertanyaan()
+    {
+        return $this->belongsTo("App\Pertanyaan");
+    }
 }

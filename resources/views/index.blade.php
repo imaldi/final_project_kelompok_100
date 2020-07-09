@@ -1,5 +1,5 @@
 @extends('adminlte.master')
 
 @section('content')
-    <h1> Daftar pertanyaan </h1>
+    <a href="{{ url("/pertanyaan")}}">pertanyaan</a>
 @endsection

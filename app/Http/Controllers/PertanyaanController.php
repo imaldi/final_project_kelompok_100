@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Pertanyaan;
+use App\Tag;
+use Auth;
 
 class PertanyaanController extends Controller
 {
@@ -13,7 +16,8 @@ class PertanyaanController extends Controller
      */
     public function index()
     {
-        //
+        $pertanyaan = Pertanyaan::orderBy("created_at", "DESC")->get();
+        return view("pertanyaan.index", compact("pertanyaan"));
     }
 
     /**
@@ -23,7 +27,8 @@ class PertanyaanController extends Controller
      */
     public function create()
     {
-        //
+        $tag = Tag::get();
+        return view("pertanyaan.create", compact("tag"));
     }
 
     /**
@@ -34,7 +39,16 @@ class PertanyaanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $pertanyaan = Pertanyaan::create([
+            "judul"     => $request->judul,
+            "isi"       => $request->isi,
+            "user_id"   => Auth::user()->id
+        ]);
+
+        // masih satu tag
+        $pertanyaan->tags()->attach($pertanyaan);
+
+        return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil dibuat");
     }
 
     /**
@@ -45,7 +59,9 @@ class PertanyaanController extends Controller
      */
     public function show($id)
     {
-        //
+        $pertanyaan = Pertanyaan::with("tags")->findOrFail($id);
+
+        return view("pertanyaan.show", compact("pertanyaan"));
     }
 
     /**
@@ -56,7 +72,10 @@ class PertanyaanController extends Controller
      */
     public function edit($id)
     {
-        //
+        $pertanyaan = Pertanyaan::with("tags")->findOrFail($id);
+        $tag = Tag::get();
+
+        return view("pertanyaan.edit", compact(["pertanyaan", "tag"]));
     }
 
     /**
@@ -68,7 +87,15 @@ class PertanyaanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $pertanyaan = Pertanyaan::with("tags")->findOrFail($id);
+
+        $pertanyaan->update([
+            "judul"     => $request->judul,
+            "isi"       => $request->isi,            
+        ]);
+        // for update m to m no replace
+        $pertanyaan->tags()->sync($request->tag);
+        return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil diedit");
     }
 
     /**
@@ -79,6 +106,10 @@ class PertanyaanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pertanyaan = Pertanyaan::with("tags")->findOrFail($id);
+        $pertanyaan->tags()->detach();
+        $pertanyaan->delete();
+
+        return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil dihapus");
     }
 }

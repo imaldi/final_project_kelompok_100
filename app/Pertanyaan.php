@@ -10,4 +10,13 @@ class Pertanyaan extends Model
         "judul", "isi", "user_id"
     ];
     
+    public function jawabans()
+    {
+        return $this->hasMany("App\Jawaban");
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany("App\Tag", "pertanyaan_tag", "pertanyaan_id", "tag_id");
+    }
 }
