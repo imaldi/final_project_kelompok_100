@@ -24,8 +24,8 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::resource('/pertanyaan',  'PertanyaanController')->except([
         "index", "show"
     ]);
-    Route::resource('/pertanyaan/{id}/jawaban',     'JawabanController')->only([
-        "store", "edit", "update", "destroy"
+    Route::resource('/pertanyaan/{id}/jawaban','JawabanController')->only([
+        "store", "edit", "update", "destroy", "index"
     ]);
 });
 
@@ -37,3 +37,11 @@ Route::resource('/pertanyaan',  'PertanyaanController')->only([
 Route::resource('/users',       'UserController');
 
 Route::resource('/tag',         'TagController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

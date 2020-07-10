@@ -1,4 +1,43 @@
 @extends('adminlte.master')
+@section('content')
+<div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Bordered Table</h3>
+    </div>
+        <a href="{{ url('/pertanyaan/create')}}" class="pt-2 pl-5">
+            <button class="btn btn-primary"> Create New Question </button>
+        </a>
+        <br>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table class="table table-bordered">
+            <thead>
+                <th>No</th>
+                <th>List Pertanyaan</th>
+                <th>Edit Pertanyaan</th>
+                <th>Detail QnA</th>
+            </thead>
+            <tbody>
+                @foreach ($pertanyaans as $pertanyaan)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $pertanyaan->isi }}</td>
+                    <td>
+                        <a href="{{ url('/pertanyaan/'.$pertanyaan->id.'/edit')}}">
+                            <button class="btn btn-warning"> Edit Pertanyaan </button>
+                        </a>
+                    </td>
+                    <td>
+                    <a href="{{url('/pertanyaan/'.$pertanyaan->id)}}">
+                            <button class="btn btn-primary"> Lihat Detail QnA </button>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+@endsection
+{{-- @extends('adminlte.master')
 
 @section('content')
     <a href="{{ url("/tag") }}">Daftar tag</a>
@@ -13,4 +52,4 @@
         @endforeach
     
 
-@endsection
+@endsection --}}

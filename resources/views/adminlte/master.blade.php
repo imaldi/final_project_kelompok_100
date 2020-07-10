@@ -27,8 +27,10 @@
   @include('adminlte.partials.sidebar')
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper mt-10 ml-10 mb-5">
+  <div class="content-wrapper">
+    <div class="container-fluid pt-5">
       @yield('content')
+    </div>
   </div>
   <!-- /.content-wrapper -->
 

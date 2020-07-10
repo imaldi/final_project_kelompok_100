@@ -16,8 +16,8 @@ class PertanyaanController extends Controller
      */
     public function index()
     {
-        $pertanyaan = Pertanyaan::orderBy("created_at", "DESC")->get();
-        return view("pertanyaan.index", compact("pertanyaan"));
+        $pertanyaans = Pertanyaan::orderBy("created_at", "DESC")->get();
+        return view("pertanyaan.index", compact("pertanyaans"));
     }
 
     /**
@@ -75,7 +75,7 @@ class PertanyaanController extends Controller
         $pertanyaan = Pertanyaan::with("tags")->findOrFail($id);
         $tag = Tag::get();
 
-        return view("pertanyaan.edit", compact(["pertanyaan", "tag"]));
+        return view("pertanyaan.edit", compact(["pertanyaan", "tag","id"]));
     }
 
     /**

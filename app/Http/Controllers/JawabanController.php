@@ -14,9 +14,11 @@ class JawabanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($pertanyaan_id)
     {
-        //
+        $jawabans = Jawaban::where("pertanyaan_id",$pertanyaan_id)->get();
+        // dd($jawaban);
+        return view('jawaban.show', compact('jawabans'));
     }
 
     /**
@@ -44,7 +46,8 @@ class JawabanController extends Controller
             "user_id"   => Auth::user()->id
         ]);
 
-        return redirect("/pertanyaan/{$pertanyaan->id}")->with("msg", "terima kasih telah menjawab pertanyaan ini");
+        return redirect("/pertanyaan/{$pertanyaan->id}");
+        // ->with("msg", "terima kasih telah menjawab pertanyaan ini");
     }
 
     /**
