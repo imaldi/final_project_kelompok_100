@@ -2,7 +2,7 @@
 @section('content')
 <div class="card card-primary">
     <div class="card-header">
-      <h3 class="card-title">Quick Example</h3>
+      <h3 class="card-title">Edit Pertanyaan</h3>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
@@ -16,7 +16,10 @@
                 <input class="form-control" type="text" name="judul" value="{{ $pertanyaan->judul }}"><br>
 
                 <label>Isi</label>
-                <textarea class="form-control" name="isi" id="" cols="30" rows="10">{{ $pertanyaan->isi}}</textarea>
+                <textarea class="form-control" id="summary-ckeditor" name="isi" cols="30" rows="10">{!! $pertanyaan->isi !!}</textarea>
+
+                <label for="">Tags</label>
+                <input class="form-control" type="text" name="tag">
 
                 <input hidden type="text" name="tanggal_dibuat" value="{{ $pertanyaan->tanggal_dibuat }}"><br>
                 
@@ -27,26 +30,9 @@
         </div>
     </form>
 @endsection
-{{-- <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post">
-    <label for="">Judul</label>
-    <input type="text" name="judul" id="" placeholder="judul" value="{{ $pertanyaan->judul }}">
-    <br>
-    <label for="">Isi</label>
-    <textarea name="isi" id="" cols="30" rows="10"> {{$pertanyaan->isi }} </textarea>
-    <br>
-    
-
-    @foreach ($tag as $item)
-        <input type="checkbox"
-        @foreach ($pertanyaan->tags as $mytag)
-            @if ($mytag->id == $item->id)
-                checked    
-            @endif
-        @endforeach
-        name="tag[]" id="" value="{{$item->id}}">  {{$item->tag_name}}
-    @endforeach
-    
-    <button type="submit">Tambah</button>
-    @csrf
-    @method("PUT")
-</form> --}}
+@push('scripts')
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script>
+        CKEDITOR.replace( 'summary-ckeditor' );
+    </script>
+@endpush

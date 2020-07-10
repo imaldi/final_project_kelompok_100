@@ -2,7 +2,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Bordered Table</h3>
+      <h3 class="card-title">Daftar Pertanyaan</h3>
     </div>
         <a href="{{ url('/pertanyaan/create')}}" class="pt-2 pl-5">
             <button class="btn btn-primary"> Create New Question </button>
@@ -21,7 +21,7 @@
                 @foreach ($pertanyaans as $pertanyaan)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $pertanyaan->isi }}</td>
+                    <td>{!! $pertanyaan->isi !!}</td>
                     <td>
                         <a href="{{ url('/pertanyaan/'.$pertanyaan->id.'/edit')}}">
                             <button class="btn btn-warning"> Edit Pertanyaan </button>

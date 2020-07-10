@@ -17,7 +17,8 @@ class PertanyaanController extends Controller
     public function index()
     {
         $pertanyaans = Pertanyaan::orderBy("created_at", "DESC")->get();
-        return view("pertanyaan.index", compact("pertanyaans"));
+        $tags = Tag::all();
+        return view("pertanyaan.index", compact("pertanyaans","tags"));
     }
 
     /**
@@ -27,8 +28,9 @@ class PertanyaanController extends Controller
      */
     public function create()
     {
-        $tag = Tag::get();
-        return view("pertanyaan.create", compact("tag"));
+        $tags = Tag::all();
+        // dd($tags);
+        return view("pertanyaan.create", compact("tags"));
     }
 
     /**
@@ -44,9 +46,24 @@ class PertanyaanController extends Controller
             "isi"       => $request->isi,
             "user_id"   => Auth::user()->id
         ]);
-
+        
         // masih satu tag
-        $pertanyaan->tags()->attach($request->tag);
+        $tagArr = explode(",",$request->tag);
+        // dd($tagArr);
+        $tagsMulti = [];
+        foreach($tagArr as $strTag){
+            $tagArrAsc["tag_name"] = strtolower($strTag);
+            $tagsMulti[] = $tagArrAsc;
+        }
+
+        foreach($tagsMulti as $tagCheck){
+            $tag = Tag::firstOrCreate($tagCheck);
+            $pertanyaan->tags()->attach($tag->id);
+        }
+        
+
+        
+        
 
         return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil dibuat");
     }
@@ -112,4 +129,5 @@ class PertanyaanController extends Controller
 
         return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil dihapus");
     }
+    //@foreach($pertanyaans->tag as $p_tags) @if($pertanyaan->id == $p->id)selected="selected"@endif @endforeach
 }
