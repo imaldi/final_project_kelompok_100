@@ -21,4 +21,15 @@ class Pertanyaan extends Model
     {
         return $this->belongsToMany("App\Tag", "pertanyaan_tag", "pertanyaan_id", "tag_id");
     }
+
+    public function user()
+    {
+        return $this->belongsTo("App\User");
+    }
+
+    public function vote()
+    {
+        return $this->belongsToMany("App\User", "vote_pertanyaans", "pertanyaan_id", "user_id")
+            ->withPivot('vote_value');
+    }
 }

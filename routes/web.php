@@ -21,12 +21,18 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(["middleware" => ["auth"]], function(){
+
     Route::resource('/pertanyaan',  'PertanyaanController')->except([
         "index", "show"
     ]);
+    
     Route::resource('/pertanyaan/{id}/jawaban','JawabanController')->only([
         "store", "edit", "update", "destroy", "index"
     ]);
+
+    Route::post('/pertanyaan/{id}/up', "VotePertanyaanController@up");
+    Route::post('/pertanyaan/{id}/down', "VotePertanyaanController@down");
+
 });
 
 Route::resource('/pertanyaan',  'PertanyaanController')->only([

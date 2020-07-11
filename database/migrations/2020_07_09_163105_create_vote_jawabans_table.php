@@ -14,9 +14,10 @@ class CreateVoteJawabansTable extends Migration
     public function up()
     {
         Schema::create('vote_jawabans', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('jawaban_id')->unsigned();
-            $table->bigInteger('vote_value')->unsigned();
+            $table->integer('vote_value');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('jawaban_id')->references('id')->on('jawabans')->onDelete('cascade');

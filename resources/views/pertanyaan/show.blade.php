@@ -7,20 +7,30 @@
     <div class="card-body">
         
         <blockquote>
-            <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post">
-                <div class="row">
-                <div class="card-vote pr-3">
-                    <div class="card-vote-up"></div>
-                    <span class="card-vote-count">0</span>
-                    <div class="card-vote-down"></div>
-                    <div class="card-vote-star"></div>
-                </div>
-                @csrf
-                @method("DELETE")
-                <p>{!! $pertanyaan->isi !!}</p>
-                <button type="submit" class="btn btn-danger">Hapus</button>
-                </div>
-            </form>
+                    <div class="row">
+                    <div class="card-vote pr-3">
+                        {{-- upvote --}}
+                        <form action="{{ url("/pertanyaan/$pertanyaan->id/up") }}" method="post">
+                            @csrf
+                            <input type="submit" class="" value="UP">
+                        </form>
+                        <span class="card-vote-count">{{ $jumlah }}</span>
+                        {{-- downvote --}}
+                        <form action="{{ url("/pertanyaan/$pertanyaan->id/down") }}" method="post">
+                            @csrf
+                            <input type="submit" class="" value="DOWN">
+                        </form>
+                        <div class="card-vote-star"></div>
+                    </div>
+                    @if (Auth::user()->id == $pertanyaan->user->id)
+                    <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post">
+                        @csrf
+                        @method("DELETE")
+                        <p>{!! $pertanyaan->isi !!}</p>
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                        </div>
+                    </form>
+                @endif
 
             <small>
                 <p>Tag:<p>
@@ -30,12 +40,13 @@
                 @endforeach
                 </ul>
             </small>
-            <a href="{{ url("/tag/create") }}">
-                <button class="btn btn-warning"> Edit </button>
-            </a>
+            @if (Auth::user()->id == $pertanyaan->user->id)
+                <a href="{{ url("/tag/create") }}">
+                    <button class="btn btn-warning"> Edit </button>
+                </a>
+            @endif
         </blockquote>
 
-        
         <ul>
             @foreach ($pertanyaan->jawabans as $item)
             <blockquote class="quote-secondary">
@@ -47,14 +58,16 @@
                         <div class="card-vote-star"></div>
                     </div>
                 <ol>{{$item->isi}} dijawab oleh {{ $item->user->name}} 
-                    <a href="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id/edit") }}">
-                        <button class="btn btn-warning"> Edit </button>
-                    </a>
-                    <form action="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id") }}" method="post">
-                        @method("DELETE")
-                        @csrf
-                        <input type="submit" value="Hapus" class="btn btn-danger">
-                    </form>
+                    @if (Auth::user()->id == $item->user->id)
+                        <a href="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id/edit") }}">
+                            <button class="btn btn-warning"> Edit </button>
+                        </a>
+                        <form action="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id") }}" method="post">
+                            @method("DELETE")
+                            @csrf
+                            <input type="submit" value="Hapus" class="btn btn-danger">
+                        </form>
+                    @endif
                 </ol>
                 </div>
             </blockquote>

@@ -77,8 +77,13 @@ class PertanyaanController extends Controller
     public function show($id)
     {
         $pertanyaan = Pertanyaan::with(["tags", "jawabans"])->findOrFail($id);
-
-        return view("pertanyaan.show", compact("pertanyaan"));
+        
+        $negatif = Pertanyaan::whereHas('vote', function($q) use ($id){
+            $q->where('vote_value', 0)->where("pertanyaan_id", $id);
+        })->count();
+        $jumlah = $positif - $negatif;
+        dd($positif);
+        return view("pertanyaan.show", compact(["pertanyaan", "jumlah"]));
     }
 
     /**

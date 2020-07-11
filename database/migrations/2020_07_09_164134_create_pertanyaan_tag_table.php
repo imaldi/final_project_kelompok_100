@@ -14,6 +14,7 @@ class CreatePertanyaanTagTable extends Migration
     public function up()
     {
         Schema::create('pertanyaan_tag', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('tag_id')->unsigned();
             $table->bigInteger('pertanyaan_id')->unsigned();
 

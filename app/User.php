@@ -46,4 +46,10 @@ class User extends Authenticatable
     {
         return $this->hasMany("App\Jawaban");
     }
+
+    public function vote()
+    {
+        return $this->belongsToMany("App\Pertanyaan", "vote_pertanyaans", "user_id", "pertanyaan_id")
+            ->withPivot('vote_value');
+    }
 }
