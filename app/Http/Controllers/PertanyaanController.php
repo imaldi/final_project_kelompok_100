@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Pertanyaan;
 use App\Tag;
 use Auth;
+use Illuminate\Support\Facades\DB;
 
 class PertanyaanController extends Controller
 {
@@ -78,11 +79,34 @@ class PertanyaanController extends Controller
     {
         $pertanyaan = Pertanyaan::with(["tags", "jawabans"])->findOrFail($id);
         
-        $negatif = Pertanyaan::whereHas('vote', function($q) use ($id){
-            $q->where('vote_value', 0)->where("pertanyaan_id", $id);
-        })->count();
+        $positif = DB::select(DB::raw(
+            "SELECT COUNT(vote_value) AS positif FROM vote_pertanyaans
+                WHERE 
+                    user_id = :user_id     AND 
+                    pertanyaan_id = :pertanyaan_id   AND
+                    vote_value = :vote_value
+            "
+        ), [
+            "user_id"   => $pertanyaan->user->id,
+            "pertanyaan_id" => $pertanyaan->id,
+            "vote_value"    => 1
+        ])[0]->positif;
+
+        $negatif = DB::select(DB::raw(
+            "SELECT COUNT(vote_value) AS negatif FROM vote_pertanyaans
+                WHERE 
+                    user_id = :user_id     AND 
+                    pertanyaan_id = :pertanyaan_id   AND
+                    vote_value = :vote_value
+            "
+        ), [
+            "user_id"   => $pertanyaan->user->id,
+            "pertanyaan_id" => $pertanyaan->id,
+            "vote_value"    => 0
+        ])[0]->negatif;
+        
         $jumlah = $positif - $negatif;
-        dd($positif);
+        // dd($positif);
         return view("pertanyaan.show", compact(["pertanyaan", "jumlah"]));
     }
 

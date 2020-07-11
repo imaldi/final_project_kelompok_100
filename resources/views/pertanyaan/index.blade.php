@@ -23,11 +23,12 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{!! $pertanyaan->isi !!}</td>
                     <td>
-                        
-                        @if (Auth::user()->id == $pertanyaan->user->id)
-                            <a href="{{ url('/pertanyaan/'.$pertanyaan->id.'/edit')}}">
-                                <button class="btn btn-warning"> Edit Pertanyaan </button>
-                            </a>
+                        @if (Auth::check())
+                            @if (Auth::user()->id == $pertanyaan->user->id)
+                                <a href="{{ url('/pertanyaan/'.$pertanyaan->id.'/edit')}}">
+                                    <button class="btn btn-warning"> Edit Pertanyaan </button>
+                                </a>
+                            @endif
                         @endif
                     </td>
                     <td>

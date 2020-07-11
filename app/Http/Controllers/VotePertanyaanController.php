@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Pertanyaan;
-
+use Illuminate\Support\Facades\DB;
 class VotePertanyaanController extends Controller
 {
     public function up($id)
@@ -24,7 +24,17 @@ class VotePertanyaanController extends Controller
             // jika udah menilai kemudian mendownkan vote
             if($pertanyaan->vote[0]->pivot->vote_value == 0 && $checkExist){
                 $jumlah = $user->reputasi + 11;
-                $pertanyaan->vote()->sync($user, ['vote_value' => 1]);
+                DB::update(DB::raw(
+                    "UPDATE vote_pertanyaans SET vote_value = :vote_value
+                        WHERE 
+                            user_id = :user_id     AND 
+                            pertanyaan_id = :pertanyaan_id  
+                    "
+                ), [
+                    "user_id"   => $pertanyaan->user->id,
+                    "pertanyaan_id" => $pertanyaan->id,
+                    "vote_value"    => 1
+                ]);
                 $user->update(["reputasi" => $jumlah]);
                 return redirect("/pertanyaan/$pertanyaan->id");
             }else{
@@ -50,7 +60,17 @@ class VotePertanyaanController extends Controller
             // jika udah menilai kemudian mendownkan vote
             if($pertanyaan->vote[0]->pivot->vote_value == 1 && $checkExist){
                 $jumlah = $user->reputasi - 11;
-                $pertanyaan->vote()->sync($user, ['vote_value' => 0]);
+                DB::update(DB::raw(
+                    "UPDATE vote_pertanyaans SET vote_value = :vote_value
+                        WHERE 
+                            user_id = :user_id     AND 
+                            pertanyaan_id = :pertanyaan_id  
+                    "
+                ), [
+                    "user_id"   => $pertanyaan->user->id,
+                    "pertanyaan_id" => $pertanyaan->id,
+                    "vote_value"    => 0
+                ]);
                 $user->update(["reputasi" => $jumlah]);
                 return redirect("/pertanyaan/$pertanyaan->id");
             }else{
