@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Pertanyaan;
 use Illuminate\Support\Facades\DB;
+use Auth;
+
 class VotePertanyaanController extends Controller
 {
     public function up($id)
@@ -13,16 +15,24 @@ class VotePertanyaanController extends Controller
         $pertanyaan = Pertanyaan::findOrFail($id);
         $user = $pertanyaan->user;
         
-        $checkExist = $pertanyaan->vote->contains($user);
+        $checkExist = $pertanyaan->vote->contains(Auth::user());
         if(!$checkExist){
             // jika tidak ada
-            $pertanyaan->vote()->save($user, ['vote_value' => 1]);
+            $pertanyaan->vote()->save(Auth::user(), ['vote_value' => 1]);
             $jumlah = 10 + $user->reputasi;
             $user->update(["reputasi" => $jumlah]);
             return redirect("/pertanyaan/$pertanyaan->id");
         }else{
             // jika udah menilai kemudian mendownkan vote
-            if($pertanyaan->vote[0]->pivot->vote_value == 0 && $checkExist){
+            $vote = DB::select(DB::raw("
+                SELECT vote_value FROM vote_pertanyaans
+                    WHERE user_id = :user_id
+                    AND pertanyaan_id = :pertanyaan_id
+            "),[
+                "user_id"   => Auth::user()->id,
+                "pertanyaan_id" => $pertanyaan->id,
+            ])[0]->vote_value;
+            if($vote == 0 && $checkExist){
                 $jumlah = $user->reputasi + 11;
                 DB::update(DB::raw(
                     "UPDATE vote_pertanyaans SET vote_value = :vote_value
@@ -31,7 +41,7 @@ class VotePertanyaanController extends Controller
                             pertanyaan_id = :pertanyaan_id  
                     "
                 ), [
-                    "user_id"   => $pertanyaan->user->id,
+                    "user_id"   => Auth::user()->id,
                     "pertanyaan_id" => $pertanyaan->id,
                     "vote_value"    => 1
                 ]);
@@ -48,17 +58,26 @@ class VotePertanyaanController extends Controller
         $pertanyaan = Pertanyaan::findOrFail($id);
         $user = $pertanyaan->user;
         
-        $checkExist = $pertanyaan->vote->contains($user);
+        
+        $checkExist = $pertanyaan->vote->contains(Auth::user());
         if(!$checkExist){
             // jika tidak ada
-            $pertanyaan->vote()->save($user, ['vote_value' => 0]);
+            $pertanyaan->vote()->save(Auth::user(), ['vote_value' => 0]);
             $jumlah = $user->reputasi - 1;
             $user->update(["reputasi" => $jumlah]);
             return redirect("/pertanyaan/$pertanyaan->id");
         }else{
             // jika ada 
             // jika udah menilai kemudian mendownkan vote
-            if($pertanyaan->vote[0]->pivot->vote_value == 1 && $checkExist){
+            $vote = DB::select(DB::raw("
+                SELECT vote_value FROM vote_pertanyaans
+                    WHERE user_id = :user_id
+                    AND pertanyaan_id = :pertanyaan_id
+            "),[
+                "user_id"   => Auth::user()->id,
+                "pertanyaan_id" => $pertanyaan->id,
+            ])[0]->vote_value;
+            if($vote == 1 && $checkExist){
                 $jumlah = $user->reputasi - 11;
                 DB::update(DB::raw(
                     "UPDATE vote_pertanyaans SET vote_value = :vote_value
@@ -67,7 +86,7 @@ class VotePertanyaanController extends Controller
                             pertanyaan_id = :pertanyaan_id  
                     "
                 ), [
-                    "user_id"   => $pertanyaan->user->id,
+                    "user_id"   => Auth::user()->id,
                     "pertanyaan_id" => $pertanyaan->id,
                     "vote_value"    => 0
                 ]);

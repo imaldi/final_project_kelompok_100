@@ -82,12 +82,11 @@ class PertanyaanController extends Controller
         $positif = DB::select(DB::raw(
             "SELECT COUNT(vote_value) AS positif FROM vote_pertanyaans
                 WHERE 
-                    user_id = :user_id     AND 
                     pertanyaan_id = :pertanyaan_id   AND
                     vote_value = :vote_value
             "
         ), [
-            "user_id"   => $pertanyaan->user->id,
+            
             "pertanyaan_id" => $pertanyaan->id,
             "vote_value"    => 1
         ])[0]->positif;
@@ -95,12 +94,10 @@ class PertanyaanController extends Controller
         $negatif = DB::select(DB::raw(
             "SELECT COUNT(vote_value) AS negatif FROM vote_pertanyaans
                 WHERE 
-                    user_id = :user_id     AND 
                     pertanyaan_id = :pertanyaan_id   AND
                     vote_value = :vote_value
             "
-        ), [
-            "user_id"   => $pertanyaan->user->id,
+        ),[
             "pertanyaan_id" => $pertanyaan->id,
             "vote_value"    => 0
         ])[0]->negatif;

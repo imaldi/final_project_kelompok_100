@@ -22,15 +22,17 @@
                         </form>
                         <div class="card-vote-star"></div>
                     </div>
-                    @if (Auth::user()->id == $pertanyaan->user->id)
-                    <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post">
-                        @csrf
-                        @method("DELETE")
-                        <p>{!! $pertanyaan->isi !!}</p>
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                        </div>
-                    </form>
-                @endif
+                    @auth
+                        @if (Auth::user()->id == $pertanyaan->user->id)
+                            <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post">
+                                @csrf
+                                @method("DELETE")
+                                <p>{!! $pertanyaan->isi !!}</p>
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                </div>
+                            </form>
+                        @endif
+                    @endauth
 
             <small>
                 <p>Tag:<p>
@@ -40,11 +42,13 @@
                 @endforeach
                 </ul>
             </small>
-            @if (Auth::user()->id == $pertanyaan->user->id)
-                <a href="{{ url("/tag/create") }}">
-                    <button class="btn btn-warning"> Edit </button>
-                </a>
-            @endif
+            @auth
+                @if (Auth::user()->id == $pertanyaan->user->id)
+                    <a href="{{ url("/tag/create") }}">
+                        <button class="btn btn-warning"> Edit </button>
+                    </a>
+                @endif
+            @endauth
         </blockquote>
 
         <ul>
@@ -58,16 +62,19 @@
                         <div class="card-vote-star"></div>
                     </div>
                 <ol>{{$item->isi}} dijawab oleh {{ $item->user->name}} 
-                    @if (Auth::user()->id == $item->user->id)
-                        <a href="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id/edit") }}">
-                            <button class="btn btn-warning"> Edit </button>
-                        </a>
-                        <form action="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id") }}" method="post">
-                            @method("DELETE")
-                            @csrf
-                            <input type="submit" value="Hapus" class="btn btn-danger">
-                        </form>
-                    @endif
+                    @auth
+                        @if (Auth::user()->id == $item->user->id)
+                            <a href="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id/edit") }}">
+                                <button class="btn btn-warning"> Edit </button>
+                            </a>
+                            <form action="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id") }}" method="post">
+                                @method("DELETE")
+                                @csrf
+                                <input type="submit" value="Hapus" class="btn btn-danger">
+                            </form>
+                        @endif    
+                    @endauth
+                    
                 </ol>
                 </div>
             </blockquote>
