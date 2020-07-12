@@ -19,6 +19,8 @@
   <!-- <link rel="stylesheet" href="{{asset('dist/upvotejs/upvotejs.css')}}"> -->
   <link rel="stylesheet" href="{{asset('css/upvote.css')}}"/>
   <script src="dist/upvotejs/upvotejs.vanilla.js"></script>
+  {{-- font awesome icon --}}
+  <script src="https://kit.fontawesome.com/95ad7e14fb.js" crossorigin="anonymous"></script>
 
 </head>
 <body class="hold-transition sidebar-mini">
