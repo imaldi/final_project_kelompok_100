@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pertanyaan;
+use App\PertanyaanComment;
+use App\JawabanComment;
 use App\Tag;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +80,8 @@ class PertanyaanController extends Controller
     public function show($id)
     {
         $pertanyaan = Pertanyaan::with(["tags", "jawabans"])->findOrFail($id);
+        $comments = PertanyaanComment::orderBy("created_at", "DESC")->get();
+        $comments_jawaban = JawabanComment::orderBy("created_at","DESC")->get();
         
         $positif = DB::select(DB::raw(
             "SELECT COUNT(vote_value) AS positif FROM vote_pertanyaans
@@ -104,7 +108,7 @@ class PertanyaanController extends Controller
         
         $jumlah = $positif - $negatif;
         // dd($positif);
-        return view("pertanyaan.show", compact(["pertanyaan", "jumlah"]));
+        return view("pertanyaan.show", compact(["pertanyaan", "jumlah","comments","comments_jawaban"]));
     }
 
     /**

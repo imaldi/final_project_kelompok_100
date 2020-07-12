@@ -19,5 +19,17 @@ class Jawaban extends Model
     {
         return $this->belongsTo("App\User");
     }
+    
+    
+    public function vote()
+    {
+        return $this->belongsToMany("App\User","vote_jawabans", "jawaban_id", "user_id")
+        ->withPivot('vote_value');
+    }
+
+    public function comment()
+    {
+        return  $this->hasMany("App\JawabanComment");
+    }
 }
 

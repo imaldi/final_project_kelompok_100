@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Jawaban;
+use Auth;
+
 
 class JawabanCommentController extends Controller
 {
@@ -32,9 +35,16 @@ class JawabanCommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $jawaban = Jawaban::findOrFail($id);
+
+        $jawaban->comment()->create([
+            "isi"       => $request->comment_jawaban,
+            "user_id"   => Auth::user()->id
+        ]);
+
+        return redirect("/pertanyaan/{$request->id_pertanyaan}");
     }
 
     /**
@@ -79,6 +89,6 @@ class JawabanCommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

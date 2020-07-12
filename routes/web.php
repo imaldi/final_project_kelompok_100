@@ -32,6 +32,10 @@ Route::group(["middleware" => ["auth"]], function(){
 
     Route::post('/pertanyaan/{id}/up', "VotePertanyaanController@up");
     Route::post('/pertanyaan/{id}/down', "VotePertanyaanController@down");
+    Route::post('/jawaban/{id}/up', "VoteJawabanController@up");
+    Route::post('/jawaban/{id}/down', "VoteJawabanController@down");
+    Route::post('/pertanyaan_komentar/{id}', "PertanyaanCommentController@store");
+    Route::post('/jawaban_komentar/{id}', "JawabanCommentController@store");
 
 });
 

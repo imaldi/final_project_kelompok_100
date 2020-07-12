@@ -20,7 +20,7 @@
                             @csrf
                             <input type="submit" class="" value="DOWN">
                         </form>
-                        <div class="card-vote-star"></div>
+                        
                     </div>
                     @auth
                         @if (Auth::user()->id == $pertanyaan->user->id)
@@ -33,12 +33,26 @@
                             </form>
                         @endif
                     @endauth
+                    {{-- input komentar pertanyaan --}}
+                    <form action="{{ url("/pertanyaan_komentar/$pertanyaan->id") }}" method="POST">
+                        @csrf
+                        <input type="text" name="comment" placeholder="berikan komentar">
+                        <input type="submit" class="btn btn-primary" value="post">
+                    </form>
 
             <small>
                 <p>Tag:<p>
                 <ul>
                 @foreach ($pertanyaan->tags as $item)
                     <li>{{$item->tag_name}}</li>
+                @endforeach
+                </ul>
+            </small>
+            <small>
+                <p>Komentar<p>
+                <ul>
+                @foreach ($comments as $comment)
+                    <li>{{$comment->isi}}</li>
                 @endforeach
                 </ul>
             </small>
@@ -55,13 +69,21 @@
             @foreach ($pertanyaan->jawabans as $item)
             <blockquote class="quote-secondary">
                 <div class="row">
-                    <div class="card-vote">
-                        <div class="card-vote-up"></div>
-                        <span class="card-vote-count">0</span>
-                        <div class="card-vote-down"></div>
-                        <div class="card-vote-star"></div>
-                    </div>
-                <ol>{{$item->isi}} dijawab oleh {{ $item->user->name}} 
+                    {{-- upvote --}}
+                    <form action="{{ url("/jawaban/$pertanyaan->id/up") }}" method="post">
+                        @csrf
+                        <input type="submit" class="" value="UP">
+                        <input hidden name="id_pertanyaan" value="{{$pertanyaan->id}}" >
+                    </form>
+                    <span class="card-vote-count">{{ $jumlah }}</span>
+                    {{-- downvote --}}
+                    <form action="{{ url("/jawaban/$pertanyaan->id/down") }}" method="post">
+                        @csrf
+                        <input type="submit" class="" value="DOWN">
+                        <input hidden name="id_pertanyaan" value="{{$pertanyaan->id}}" >
+                    </form>
+                    
+                <ol>{!!$item->isi!!} dijawab oleh {{ $item->user->name}} 
                     @auth
                         @if (Auth::user()->id == $item->user->id)
                             <a href="{{ url("/pertanyaan/$pertanyaan->id/jawaban/$item->id/edit") }}">
@@ -74,15 +96,29 @@
                             </form>
                         @endif    
                     @endauth
-                    
+                    {{-- input komentar jawaban --}}
+                    <form action="{{ url("/jawaban_komentar/$item->id") }}" method="POST">
+                        @csrf
+                        <input type="text" name="comment_jawaban" placeholder="berikan komentar">
+                        <input type="submit" class="btn btn-primary" value="post">
+                        <input hidden name="id_pertanyaan" value="{{$pertanyaan->id}}">
+                    </form>
                 </ol>
+                <small>
+                    <p>Komentar<p>
+                    <ul>
+                    @foreach ($comments_jawaban as $comment)
+                        <li>{{$comment->isi}}</li>
+                    @endforeach
+                    </ul>
+                </small>
                 </div>
             </blockquote>
             @endforeach
             <li>
                 <label for="">Beri jawaban</label>
                 <form action="{{ url("/pertanyaan/{$pertanyaan->id}/jawaban") }}" method="post">
-                    <textarea class="form-control" name="isi" id="" cols="30" rows="7"></textarea><br>
+                    <textarea class="form-control" id="summary-ckeditor" name="isi" id="" cols="30" rows="7"></textarea><br>
                     @csrf
                     <button type="submit" class="btn btn-success">Jawab</button>
                 </form>
@@ -94,5 +130,9 @@
 @push('scripts')
     <script>
         Upvote.create('id');
+    </script>
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script>
+        CKEDITOR.replace( 'summary-ckeditor' );
     </script>
 @endpush

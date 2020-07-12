@@ -32,4 +32,9 @@ class Pertanyaan extends Model
         return $this->belongsToMany("App\User", "vote_pertanyaans", "pertanyaan_id", "user_id")
             ->withPivot('vote_value');
     }
+
+    public function comment()
+    {
+        return  $this->hasMany("App\PertanyaanComment");
+    }
 }
