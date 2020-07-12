@@ -150,10 +150,12 @@ class PertanyaanController extends Controller
              $tagsMulti[] = $tagArrAsc;
          }
  
+         $hasilTag = [];
          foreach($tagsMulti as $tagCheck){
              $tag = Tag::firstOrCreate($tagCheck);
-             $pertanyaan->tags()->attach($tag->id);
+             array_push($hasilTag, $tag->id);
          }
+         $pertanyaan->tags()->sync($hasilTag);
         // $pertanyaan->tags()->sync($request->tag);
         return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil diedit");
     }
