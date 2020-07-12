@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Pertanyaan;
 use Auth;
+use App\PertanyaanComment;
 
 class PertanyaanCommentController extends Controller
 {
@@ -54,7 +55,7 @@ class PertanyaanCommentController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -65,7 +66,8 @@ class PertanyaanCommentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comment = PertanyaanComment::findOrFail($id);
+        return view("commentPertanyaan.edit", compact("comment"));
     }
 
     /**
@@ -77,7 +79,12 @@ class PertanyaanCommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $comment = PertanyaanComment::findOrFail($id);
+        $comment->update([
+            "isi"   => $request->comment
+        ]);
+        
+        return redirect("/pertanyaan/".$comment->pertanyaan->id);
     }
 
     /**
@@ -88,6 +95,9 @@ class PertanyaanCommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $comment = PertanyaanComment::findOrFail($id);
+        $comment->delete();
+
+        return redirect("/pertanyaan/".$comment->pertanyaan->id);
     }
 }

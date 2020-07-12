@@ -35,7 +35,15 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::post('/jawaban/{id}/up', "VoteJawabanController@up");
     Route::post('/jawaban/{id}/down', "VoteJawabanController@down");
     Route::post('/pertanyaan_komentar/{id}', "PertanyaanCommentController@store");
+    Route::get('/pertanyaan_komentar/{id}/edit', "PertanyaanCommentController@edit");
+    Route::put('/pertanyaan_komentar/{id}', "PertanyaanCommentController@update");
+    Route::delete('/pertanyaan_komentar/{id}', "PertanyaanCommentController@destroy");
+
+
     Route::post('/jawaban_komentar/{id}', "JawabanCommentController@store");
+    Route::get('/jawaban_komentar/{id}/edit', "JawabanCommentController@edit");
+    Route::put('/jawaban_komentar/{id}', "JawabanCommentController@update");
+    Route::delete('/jawaban_komentar/{id}', "JawabanCommentController@destroy");
 
 });
 
