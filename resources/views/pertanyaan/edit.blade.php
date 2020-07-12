@@ -18,8 +18,15 @@
                 <label>Isi</label>
                 <textarea class="form-control" id="summary-ckeditor" name="isi" cols="30" rows="10">{!! $pertanyaan->isi !!}</textarea>
 
+                @php
+                    $tags = [];
+                    foreach ($pertanyaan->tags as $value) {
+                        array_push($tags, $value->tag_name);
+                    }
+                    $tags = implode(",",$tags);
+                @endphp
                 <label for="">Tags</label>
-                <input class="form-control" type="text" name="tag">
+                <input class="form-control" type="text" name="tag" value="{{ $tags }}">
 
                 <input hidden type="text" name="tanggal_dibuat" value="{{ $pertanyaan->tanggal_dibuat }}"><br>
                 

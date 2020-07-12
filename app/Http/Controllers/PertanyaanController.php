@@ -141,7 +141,20 @@ class PertanyaanController extends Controller
             "isi"       => $request->isi,            
         ]);
         // for update m to m no replace
-        $pertanyaan->tags()->sync($request->tag);
+         // masih satu tag
+         $tagArr = explode(",",$request->tag);
+         // dd($tagArr);
+         $tagsMulti = [];
+         foreach($tagArr as $strTag){
+             $tagArrAsc["tag_name"] = strtolower($strTag);
+             $tagsMulti[] = $tagArrAsc;
+         }
+ 
+         foreach($tagsMulti as $tagCheck){
+             $tag = Tag::firstOrCreate($tagCheck);
+             $pertanyaan->tags()->attach($tag->id);
+         }
+        // $pertanyaan->tags()->sync($request->tag);
         return redirect("/pertanyaan")->with("msg", "pertanyaan berhasil diedit");
     }
 
