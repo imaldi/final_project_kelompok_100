@@ -67,7 +67,7 @@
                             <td>
                             @auth
                             @if (Auth::user()->id == $pertanyaan->user->id)
-                            <a href="{{ url("/tag/create") }}">
+                            <a href="{{ url('/pertanyaan/'.$pertanyaan->id.'/edit')}}">
                                 <button class="btn btn-warning"> <i class="fas fa-edit"></i> </button>
                             </a>
                             @endif
