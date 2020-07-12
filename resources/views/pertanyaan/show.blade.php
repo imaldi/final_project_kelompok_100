@@ -7,18 +7,20 @@
     <div class="card-body">
         
         <blockquote>
-                    <div class="row">
+            <div class="row">
                     <div class="card-vote pr-3">
                         {{-- upvote --}}
                         <form action="{{ url("/pertanyaan/$pertanyaan->id/up") }}" method="post">
                             @csrf
-                            <input type="submit" class="" value="UP">
+                            {{-- <input type="submit" class="" value="UP"> --}}
+                            <button type="submit" value="UP" class="btn btn-primary"><i class="fas fa-chevron-up"></i></button>
                         </form>
                         <span class="card-vote-count">{{ $jumlah }}</span>
                         {{-- downvote --}}
                         <form action="{{ url("/pertanyaan/$pertanyaan->id/down") }}" method="post">
                             @csrf
-                            <input type="submit" class="" value="DOWN">
+                            {{-- <input type="submit" class="" value="DOWN"> --}}
+                            <button type="submit" value="DOWN" class="btn btn-primary"><i class="fas fa-chevron-down"></i></button>
                         </form>
                         
                     </div>
@@ -27,9 +29,13 @@
                             <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post">
                                 @csrf
                                 @method("DELETE")
-                                <p>{!! $pertanyaan->isi !!}</p>
-                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                <div class="row-md-2">
+                                    <p>{!! $pertanyaan->isi !!}</p>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
+            </div>
                             </form>
                         @endif
                     @endauth
