@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jawaban;
 use Auth;
-
+use App\JawabanComment;
 
 class JawabanCommentController extends Controller
 {
@@ -66,7 +66,8 @@ class JawabanCommentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comment = JawabanComment::findOrFail($id);
+        return view("commentJawaban.edit", compact("comment"));
     }
 
     /**
@@ -78,7 +79,12 @@ class JawabanCommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $comment = JawabanComment::findOrFail($id);
+        $comment->update([
+            "isi"   => $request->comment
+        ]);
+        
+        return redirect("/pertanyaan/".$comment->jawaban->pertanyaan->id);
     }
 
     /**
@@ -89,6 +95,9 @@ class JawabanCommentController extends Controller
      */
     public function destroy($id)
     {
+        $comment = JawabanComment::findOrFail($id);
+        $comment->delete();
         
+        return redirect("/pertanyaan/".$comment->jawaban->pertanyaan->id);
     }
 }

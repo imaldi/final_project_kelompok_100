@@ -44,7 +44,7 @@
                 <p>Tag:<p>
                 <ul>
                 @foreach ($pertanyaan->tags as $item)
-                    <li>{{$item->tag_name}}</li>
+                        <li>{{$item->tag_name}}</li>
                 @endforeach
                 </ul>
             </small>
@@ -52,7 +52,19 @@
                 <p>Komentar<p>
                 <ul>
                 @foreach ($comments as $comment)
-                    <li>{{$comment->isi}}</li>
+                    @auth
+                        @if (Auth::user()->id == $comment->pertanyaan->user->id)
+                            <li> <a href="{{ url("/pertanyaan_komentar/$comment->id/edit") }}"> {{$comment->isi}} </a> 
+                            <form action="{{ url("/pertanyaan_komentar/$comment->id") }}" method="post">
+                                <input type="submit" value="hapus">
+                                @csrf
+                                @method("DELETE")
+                            </form>
+                            </li>
+                        @else
+                            <li>  {{$comment->isi}} </li>
+                        @endif
+                    @endauth
                 @endforeach
                 </ul>
             </small>
@@ -108,7 +120,22 @@
                     <p>Komentar<p>
                     <ul>
                     @foreach ($comments_jawaban as $comment)
-                        <li>{{$comment->isi}}</li>
+                        <li>
+                            @auth
+                                @if (Auth::user()->id == $comment->jawaban->user->id)
+                                    <a href="{{ url("/jawaban_komentar/$comment->id/edit") }}">{{$comment->isi}}
+                                    </a>
+                                    <form action="{{ url("/jawaban_komentar/$comment->id") }}" method="post">
+                                        <input type="submit" value="hapus">
+                                        @csrf
+                                        @method("DELETE")
+                                    </form>
+                                @else
+                                    {{$comment->isi}}
+                                @endif
+                            @endauth    
+                        
+                        </li>
                     @endforeach
                     </ul>
                 </small>
