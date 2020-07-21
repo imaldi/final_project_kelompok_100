@@ -25,20 +25,20 @@
                             </form>
                         </td>
                         <td>
-                            @auth
-                                @if (Auth::user()->id == $pertanyaan->user->id)
-                                    <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post" class="ml-3">
-                                        @csrf
-                                        @method("DELETE")
-                                        
-                                            <p>{!! $pertanyaan->isi !!}</p>
+                            <form action="{{ url("/pertanyaan/$pertanyaan->id") }}" method="post" class="ml-3">
+                                @csrf
+                                @method("DELETE")
+                                
+                                <p>{!! $pertanyaan->isi !!}</p>
+                                @auth
+                                    @if (Auth::user()->id == $pertanyaan->user->id)
                                             <button type="submit" class="btn btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         
-                                    </form>
-                                @endif
-                            @endauth
+                                    @endif
+                                @endauth
+                                </form>
                         </td>
                     </tr>
                 </table>
@@ -56,10 +56,10 @@
                 
                 <table>
                     
+                    <tr>
                     <small>
-                        <p>Tag:<p>
-                            <tr>
-                                @foreach ($pertanyaan->tags as $item)
+                        <p><b>Tag:</b><p>
+                            @foreach ($pertanyaan->tags as $item)
                             <td>
                                 {{$item->tag_name}}
                             </td>
@@ -73,12 +73,14 @@
                             @endif
                             @endauth
                             </td>
-                        </tr>
                     </small>
-            
+                    </tr>
+                        
+                    <tr>
                     <small>
-                <tr>
-                    <p>Komentar<p>
+                        <td>
+                    <p><b>Komentar</b><p>
+                    </td>
                 </tr>
                 
                 @foreach ($comments as $comment)
@@ -94,7 +96,6 @@
                                     @csrf
                                     @method("DELETE")
                                 </form>
-                                
                                 @else
                                 {{$comment->isi}}
                                 @endif
@@ -125,7 +126,7 @@
                         <form action="{{ url("/jawaban/$pertanyaan->id/down") }}" method="post">
                             @csrf
                             {{-- <input type="submit" class="" value="DOWN"> --}}
-                            <button type="submit" value="UP" class="btn btn-primary"><i class="fas fa-chevron-up"></i></button>
+                            <button type="submit" value="DOWN" class="btn btn-primary"><i class="fas fa-chevron-down"></i></button>
                             <input hidden name="id_pertanyaan" value="{{$pertanyaan->id}}" >
                         </form>
                     </td>
@@ -170,7 +171,10 @@
                                 
                                     @auth
                                         @if (Auth::user()->id == $comment->jawaban->user->id)
-                                            <a href="{{ url("/jawaban_komentar/$comment->id/edit") }}">{{$comment->isi}}
+                                        @if($comment->jawaban_id == $item->id)
+                                        {{$comment->isi}}
+                                            <a href="{{ url("/jawaban_komentar/$comment->id/edit") }}" class="btn btn-warning">
+                                                Edit
                                             </a>
                                             <form action="{{ url("/jawaban_komentar/$comment->id") }}" method="post">
                                                 {{-- <input type="submit" value="hapus"> --}}
@@ -180,8 +184,11 @@
                                                 @csrf
                                                 @method("DELETE")
                                             </form>
+                                            @endif
                                         @else
+                                        @if($comment->jawaban_id == $item->id)
                                             {{$comment->isi}}
+                                            @endif
                                         @endif
                                     @endauth      
                             @endforeach

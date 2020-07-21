@@ -80,6 +80,7 @@ class PertanyaanController extends Controller
     public function show($id)
     {
         $pertanyaan = Pertanyaan::with(["tags", "jawabans"])->findOrFail($id);
+        // dd($pertanyaan);
         $comments = PertanyaanComment::orderBy("created_at", "DESC")->get();
         $comments_jawaban = JawabanComment::orderBy("created_at","DESC")->get();
         
@@ -107,7 +108,7 @@ class PertanyaanController extends Controller
         ])[0]->negatif;
         
         $jumlah = $positif - $negatif;
-        // dd($positif);
+        // dd($comments_jawaban);
         return view("pertanyaan.show", compact(["pertanyaan", "jumlah","comments","comments_jawaban"]));
     }
 
